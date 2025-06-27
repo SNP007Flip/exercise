@@ -1,0 +1,2937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrossFit Kettlebell Training Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #2d2d2d 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #cccccc;
+            margin-top: 10px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .tab-button {
+            background: transparent;
+            border: none;
+            color: #cccccc;
+            padding: 15px 25px;
+            margin: 0 5px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .tab-button:hover {
+            background: rgba(255, 107, 53, 0.2);
+            color: #ff6b35;
+            transform: translateY(-2px);
+        }
+
+        .tab-button.active {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .exercise-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .exercise-card {
+            background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .exercise-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b35, #f7931e);
+        }
+
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.2);
+            border-color: rgba(255, 107, 53, 0.3);
+        }
+
+        .exercise-card.expanded {
+            transform: scale(1.02);
+            z-index: 10;
+            box-shadow: 0 20px 60px rgba(255, 107, 53, 0.3);
+        }
+
+        .exercise-details-full {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 107, 53, 0.2);
+            animation: slideDown 0.3s ease;
+        }
+
+        .exercise-details-full.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; max-height: 0; }
+            to { opacity: 1; max-height: 1000px; }
+        }
+
+        .detail-section {
+            margin-bottom: 15px;
+        }
+
+        .detail-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #ff6b35;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .detail-list li {
+            background: rgba(255, 255, 255, 0.05);
+            margin: 5px 0;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border-left: 3px solid #ff6b35;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .variations-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .variation-tag {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .expand-btn {
+            background: rgba(255, 107, 53, 0.2);
+            border: 1px solid #ff6b35;
+            color: #ff6b35;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .expand-btn:hover {
+            background: #ff6b35;
+            color: white;
+        }
+
+        .exercise-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .meta-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .meta-label {
+            font-size: 0.8rem;
+            color: #999;
+            margin-bottom: 4px;
+        }
+
+        .meta-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #ff6b35;
+        }
+
+        .exercise-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ff6b35;
+            margin-bottom: 10px;
+        }
+
+        .exercise-description {
+            color: #cccccc;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .exercise-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .difficulty {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .difficulty.beginner { background: linear-gradient(45deg, #4CAF50, #66BB6A); }
+        .difficulty.intermediate { background: linear-gradient(45deg, #FF9800, #FFB74D); }
+        .difficulty.advanced { background: linear-gradient(45deg, #F44336, #EF5350); }
+
+        .muscle-groups {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .muscle-tag {
+            background: rgba(255, 107, 53, 0.2);
+            color: #ff6b35;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .wod-section {
+            background: linear-gradient(145deg, #1a1a1a, #252525);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 107, 53, 0.2);
+        }
+
+        .wod-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #ff6b35;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .wod-description {
+            text-align: center;
+            color: #cccccc;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+
+        .wod-exercises {
+            list-style: none;
+            padding: 0;
+        }
+
+        .wod-exercises li {
+            background: rgba(255, 255, 255, 0.05);
+            margin: 10px 0;
+            padding: 15px 20px;
+            border-radius: 10px;
+            border-left: 4px solid #ff6b35;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .schedule-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .day-card {
+            background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 107, 53, 0.1);
+        }
+
+        .day-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ff6b35;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .body-type-selector {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .body-type-btn {
+            background: linear-gradient(45deg, #2a2a2a, #3a3a3a);
+            border: 2px solid #ff6b35;
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .body-type-btn:hover, .body-type-btn.active {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+
+        .search-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            width: 300px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .filter-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            color: #cccccc;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(255, 107, 53, 0.2);
+            color: #ff6b35;
+            border-color: #ff6b35;
+        }
+
+        .timer-section {
+            background: linear-gradient(145deg, #1a1a1a, #252525);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .timer-display {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #ff6b35;
+            margin-bottom: 20px;
+            font-family: monospace;
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .timer-btn {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .timer-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 107, 53, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #ff6b35;
+            display: block;
+        }
+
+        .stat-label {
+            color: #cccccc;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .exercise-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .tab-button {
+                width: 100%;
+            }
+            
+            .search-input {
+                width: 100%;
+                max-width: 280px;
+                margin-bottom: 15px;
+            }
+            
+            .filter-section {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .exercise-details-full {
+                font-size: 0.9rem;
+            }
+            
+            .detail-list li {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔥 CROSSFIT KETTLEBELL HUB 🔥</h1>
+            <p>Master Dynamic Kettlebell Training • Build Elite Functional Strength • Forge Your Body</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="tab-button active" onclick="showTab('exercises', this)">All Exercises</button>
+            <button class="tab-button" onclick="showTab('wods', this)">CrossFit WODs</button>
+            <button class="tab-button" onclick="showTab('schedule', this)">Body Group Schedule</button>
+            <button class="tab-button" onclick="showTab('bodytype', this)">Body Type Programs</button>
+            <button class="tab-button" onclick="showTab('timer', this)">Workout Timer</button>
+        </div>
+
+        <!-- All Exercises Tab -->
+        <div id="exercises" class="tab-content active">
+            <div class="filter-section">
+                <input type="text" id="exerciseSearch" placeholder="🔍 Search exercises..." class="search-input">
+                <button class="filter-btn active" onclick="filterExercises('all', this)">All</button>
+                <button class="filter-btn" onclick="filterExercises('beginner', this)">Beginner</button>
+                <button class="filter-btn" onclick="filterExercises('intermediate', this)">Intermediate</button>
+                <button class="filter-btn" onclick="filterExercises('advanced', this)">Advanced</button>
+                <button class="filter-btn" onclick="filterExercises('upper', this)">Upper Body</button>
+                <button class="filter-btn" onclick="filterExercises('lower', this)">Lower Body</button>
+                <button class="filter-btn" onclick="filterExercises('core', this)">Core</button>
+                <button class="filter-btn" onclick="filterExercises('fullbody', this)">Full Body</button>
+            </div>
+
+            <div class="exercise-grid" id="exerciseGrid">
+                <!-- Exercises will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- CrossFit WODs Tab -->
+        <div id="wods" class="tab-content">
+            <div class="wod-section">
+                <h2 class="wod-title">KETTLEBELL FRAN</h2>
+                <p class="wod-description">21-15-9 for Time</p>
+                <ul class="wod-exercises">
+                    <li>Kettlebell Thrusters</li>
+                    <li>Pull-ups</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">ARNIE (Hero WOD)</h2>
+                <p class="wod-description">For Time</p>
+                <ul class="wod-exercises">
+                    <li>21 Turkish Get-Ups (Right Arm)</li>
+                    <li>50 Kettlebell Swings</li>
+                    <li>21 Overhead Squats (Left Arm)</li>
+                    <li>50 Kettlebell Swings</li>
+                    <li>21 Overhead Squats (Right Arm)</li>
+                    <li>50 Kettlebell Swings</li>
+                    <li>21 Turkish Get-Ups (Left Arm)</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">DEATH BY KETTLEBELL SWINGS</h2>
+                <p class="wod-description">Every Minute on the Minute</p>
+                <ul class="wod-exercises">
+                    <li>Minute 1: 1 KB Swing</li>
+                    <li>Minute 2: 2 KB Swings</li>
+                    <li>Minute 3: 3 KB Swings</li>
+                    <li>Continue until failure...</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">KETTLEBELL DT</h2>
+                <p class="wod-description">5 Rounds for Time</p>
+                <ul class="wod-exercises">
+                    <li>12 Kettlebell Deadlifts</li>
+                    <li>9 Kettlebell Cleans</li>
+                    <li>6 Kettlebell Push Jerks</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">EMOM 12 KETTLEBELL CRUSHER</h2>
+                <p class="wod-description">12 Minute EMOM (Alternating)</p>
+                <ul class="wod-exercises">
+                    <li>Odd Minutes: 25 Single Arm KB Swings</li>
+                    <li>Even Minutes: 8 Burpee Box Jumps</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">SIMPLE & SINISTER</h2>
+                <p class="wod-description">Pavel's Classic Protocol</p>
+                <ul class="wod-exercises">
+                    <li>100 Single-Arm Swings (10 sets of 10)</li>
+                    <li>10 Turkish Get-Ups (5 each side)</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">THE BIG FOUR</h2>
+                <p class="wod-description">Ultimate Strength Workout</p>
+                <ul class="wod-exercises">
+                    <li>Double KB Strict Press - 5x5</li>
+                    <li>Double KB Front Squat - 5x5</li>
+                    <li>Double KB Bent-Over Row - 5x5</li>
+                    <li>KB Swings - 5x20</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">BELL BASTARD</h2>
+                <p class="wod-description">Ladder Workout - Clean, Squat, Snatch</p>
+                <ul class="wod-exercises">
+                    <li>1 KB Clean, 1 KB Squat, 1 KB Snatch</li>
+                    <li>2 KB Clean, 2 KB Squat, 2 KB Snatch</li>
+                    <li>3 KB Clean, 3 KB Squat, 3 KB Snatch</li>
+                    <li>Continue up ladder as far as possible</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">QUICKSILVER</h2>
+                <p class="wod-description">For Time - 3 Rounds</p>
+                <ul class="wod-exercises">
+                    <li>50 KB Hang Cleans</li>
+                    <li>50 KB Single-Arm Swings</li>
+                    <li>50 KB Half Snatches</li>
+                    <li>Repeat 3 times FOR TIME</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">IRON MAN WORKOUT</h2>
+                <p class="wod-description">30-Minute AMRAP with Buy-In</p>
+                <ul class="wod-exercises">
+                    <li>Buy-in: 100 KB Swings</li>
+                    <li>30-min AMRAP:</li>
+                    <li>• Double KB Military Press</li>
+                    <li>• Double KB Hang Clean</li>
+                    <li>• Double KB Squat</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">NOVA</h2>
+                <p class="wod-description">Advanced Workout with Burpee Buy-In</p>
+                <ul class="wod-exercises">
+                    <li>Buy-in: 50 Burpees</li>
+                    <li>10 Rounds For Time:</li>
+                    <li>6 Double KB Half Snatch</li>
+                    <li>3 Overhead Deadlifts each side</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">4-IN-1 KETTLEBELL</h2>
+                <p class="wod-description">Aerobic, Anaerobic, Strength & Flexibility</p>
+                <ul class="wod-exercises">
+                    <li>4 min Alternating KB Swings AMRAP</li>
+                    <li>2 min Rest</li>
+                    <li>4 min KB Strict Press AMRAP</li>
+                    <li>2 min Rest</li>
+                    <li>Flexibility & Cooldown</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">TACO44</h2>
+                <p class="wod-description">Birthday WOD Special</p>
+                <ul class="wod-exercises">
+                    <li>44 KB Thrusters</li>
+                    <li>44 KB Swings</li>
+                    <li>44 KB High Pulls</li>
+                    <li>44 KB Goblet Squats</li>
+                    <li>For Time</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">DOSMIO</h2>
+                <p class="wod-description">24-Minute Technique Focus (Dos = 2 reps)</p>
+                <ul class="wod-exercises">
+                    <li>EMOM 24 minutes:</li>
+                    <li>2 KB Cleans (light weight)</li>
+                    <li>2 KB Presses</li>
+                    <li>2 KB Squats</li>
+                    <li>Focus on perfect technique</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">MBG COMBO</h2>
+                <p class="wod-description">Dead Swing into Tricep Push-Up</p>
+                <ul class="wod-exercises">
+                    <li>Complex: Dead Swing → Tricep Push-Up</li>
+                    <li>Option 1: 12 min EMOM, 3 reps</li>
+                    <li>Option 2: 5 min AMRAP, 1 min rest, repeat 4x</li>
+                    <li>Heavy weight, explosive movement</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">BURN COMPLEX</h2>
+                <p class="wod-description">Two KB Lightweight Cardio</p>
+                <ul class="wod-exercises">
+                    <li>Complex: Dead Swing → Clean → Squat → Alt Press → Half Snatch → Return to Dead</li>
+                    <li>12 min EMOM, 3 reps of complex</li>
+                    <li>OR</li>
+                    <li>5 min AMRAP, 1 min rest, repeat 4x</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">SNATCH MONSTER</h2>
+                <p class="wod-description">Snatches and Runs</p>
+                <ul class="wod-exercises">
+                    <li>3 AMRAP rounds, 6 minutes each:</li>
+                    <li>4/4 Hang Snatch + 50m Run</li>
+                    <li>3 min rest between rounds</li>
+                    <li>Final: FOR TIME finish</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">FEMALE 8-MINUTE</h2>
+                <p class="wod-description">Anna's Special Workout</p>
+                <ul class="wod-exercises">
+                    <li>1 min Double-Arm KB Swings</li>
+                    <li>1 min Squat Dead Lift</li>
+                    <li>30 sec Around the Body</li>
+                    <li>30 sec Rest</li>
+                    <li>Repeat for 8 minutes total</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">ROSES AND BABIES 96</h2>
+                <p class="wod-description">Deceptively Named Brutal Workout</p>
+                <ul class="wod-exercises">
+                    <li>96 KB Swings</li>
+                    <li>96 KB Goblet Squats</li>
+                    <li>96 KB High Pulls</li>
+                    <li>96 KB Deadlifts</li>
+                    <li>Break up reps as needed, FOR TIME</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">GORILLA BLACKBACK</h2>
+                <p class="wod-description">World Kettlebell Video Workout #2</p>
+                <ul class="wod-exercises">
+                    <li>AMRAP 15 minutes:</li>
+                    <li>5 Gorilla Cleans</li>
+                    <li>10 KB Swings</li>
+                    <li>15 Goblet Squats</li>
+                    <li>20 KB High Pulls</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">MEGAN</h2>
+                <p class="wod-description">Fast-Paced Kettlebell Sprint</p>
+                <ul class="wod-exercises">
+                    <li>For Time:</li>
+                    <li>21 KB Swings</li>
+                    <li>15 KB Goblet Squats</li>
+                    <li>9 KB Snatches (each arm)</li>
+                    <li>No rest - sprint pace!</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">TABATA EVERYTHING</h2>
+                <p class="wod-description">Multiple Tabata Rounds</p>
+                <ul class="wod-exercises">
+                    <li>Tabata 1: KB Swings (8 rounds)</li>
+                    <li>Rest 1 minute</li>
+                    <li>Tabata 2: KB Goblet Squats (8 rounds)</li>
+                    <li>Rest 1 minute</li>
+                    <li>Tabata 3: KB Snatches (8 rounds)</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">RUSSIAN COMPLEX</h2>
+                <p class="wod-description">Traditional Russian Training</p>
+                <ul class="wod-exercises">
+                    <li>4 Rounds:</li>
+                    <li>10 KB Swings</li>
+                    <li>10 KB Goblet Squats</li>
+                    <li>10 KB Push Press</li>
+                    <li>10 KB Russian Twists</li>
+                    <li>1 min rest between rounds</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">PYRAMID POWER</h2>
+                <p class="wod-description">Ascending/Descending Ladder</p>
+                <ul class="wod-exercises">
+                    <li>Pyramid 1-2-3-4-5-4-3-2-1:</li>
+                    <li>KB Thrusters</li>
+                    <li>KB Swings (x2 the number)</li>
+                    <li>KB High Pulls</li>
+                    <li>Example: Round 3 = 3 Thrusters, 6 Swings, 3 High Pulls</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">KETTLEBELL KAREN</h2>
+                <p class="wod-description">Inspired by Wall Ball Karen</p>
+                <ul class="wod-exercises">
+                    <li>150 KB Thrusters for Time</li>
+                    <li>Break up reps as needed</li>
+                    <li>Moderate weight for high volume</li>
+                    <li>Goal: Sub 15 minutes</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">300 SPARTANS KB</h2>
+                <p class="wod-description">300 Rep Challenge</p>
+                <ul class="wod-exercises">
+                    <li>For Time:</li>
+                    <li>50 KB Swings</li>
+                    <li>50 KB Goblet Squats</li>
+                    <li>50 KB High Pulls</li>
+                    <li>50 KB Deadlifts</li>
+                    <li>50 KB Push Press</li>
+                    <li>50 KB Russian Twists</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">THE GREAT DESTROYER</h2>
+                <p class="wod-description">Volume Endurance Challenge</p>
+                <ul class="wod-exercises">
+                    <li>AMRAP 45 minutes:</li>
+                    <li>5 KB Clean & Press (each arm)</li>
+                    <li>10 KB Swings</li>
+                    <li>15 KB Goblet Squats</li>
+                    <li>20 KB High Pulls</li>
+                    <li>Pace for the full 45 minutes</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">STRANGE</h2>
+                <p class="wod-description">Unusual Movement Patterns</p>
+                <ul class="wod-exercises">
+                    <li>5 Rounds for Time:</li>
+                    <li>8 Turkish Get-Ups (each side)</li>
+                    <li>16 KB Windmills (each side)</li>
+                    <li>24 KB Around the World</li>
+                    <li>32 KB Halos</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">LADDER TO HELL</h2>
+                <p class="wod-description">Ascending Rep Ladder</p>
+                <ul class="wod-exercises">
+                    <li>Every minute add 1 rep:</li>
+                    <li>Min 1: 1 KB Snatch each arm</li>
+                    <li>Min 2: 2 KB Snatch each arm</li>
+                    <li>Min 3: 3 KB Snatch each arm</li>
+                    <li>Continue until failure</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">MOGADISHU MILE</h2>
+                <p class="wod-description">The Longest Mile You'll Run</p>
+                <ul class="wod-exercises">
+                    <li>Every 400m of running:</li>
+                    <li>Stop and do 15 KB Swings</li>
+                    <li>15 KB Goblet Squats</li>
+                    <li>Continue until 1 mile complete</li>
+                    <li>4 stops total</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">IVAN DRAGO</h2>
+                <p class="wod-description">Soviet-Style Punishment</p>
+                <ul class="wod-exercises">
+                    <li>EMOM 20 minutes:</li>
+                    <li>Odd: 10 KB Swings + 10 Burpees</li>
+                    <li>Even: 20 KB Goblet Squats</li>
+                    <li>2-minute rest breaks feel like 2 seconds</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">SECOND CUT</h2>
+                <p class="wod-description">CrossFit Games Style</p>
+                <ul class="wod-exercises">
+                    <li>For Time:</li>
+                    <li>50 KB Swings</li>
+                    <li>40 Handstand Walk (feet)</li>
+                    <li>30 KB Snatches</li>
+                    <li>20 Handstand Walk (feet)</li>
+                    <li>10 KB Turkish Get-Ups</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">THE MONSTER</h2>
+                <p class="wod-description">Ultimate Endurance Test</p>
+                <ul class="wod-exercises">
+                    <li>100 Calorie Row or 1.5k Run</li>
+                    <li>Then 8 min AMRAP:</li>
+                    <li>Dead Clean → Dead Snatch → Swing Snatch → OH Reverse Lunge</li>
+                    <li>Use one KB throughout</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">EINAR - ONE WHO FIGHTS ALONE</h2>
+                <p class="wod-description">Mixed Equipment Challenge</p>
+                <ul class="wod-exercises">
+                    <li>For Time:</li>
+                    <li>30 KB Swings</li>
+                    <li>20 Dumbbell Thrusters</li>
+                    <li>10 Barbell Deadlifts</li>
+                    <li>Repeat 3 times</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">KB MURPH</h2>
+                <p class="wod-description">Kettlebell Version of Hero WOD</p>
+                <ul class="wod-exercises">
+                    <li>1 Mile Run</li>
+                    <li>100 KB Thrusters</li>
+                    <li>200 KB Swings</li>
+                    <li>300 KB Goblet Squats</li>
+                    <li>1 Mile Run</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">ANNIE KB</h2>
+                <p class="wod-description">50-40-30-20-10 Ladder</p>
+                <ul class="wod-exercises">
+                    <li>KB American Swings</li>
+                    <li>KB Sit-Ups</li>
+                    <li>Descending ladder for time</li>
+                    <li>Focus on transition speed</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">KB FIGHT GONE BAD</h2>
+                <p class="wod-description">5 Stations, 3 Rounds</p>
+                <ul class="wod-exercises">
+                    <li>1 min each station, 5 rounds:</li>
+                    <li>KB Thrusters</li>
+                    <li>KB Sumo DL High Pulls</li>
+                    <li>KB Box Step-Ups</li>
+                    <li>KB Push Press</li>
+                    <li>Rest</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">FILTHY FIFTY KB</h2>
+                <p class="wod-description">50 Reps of 10 Exercises</p>
+                <ul class="wod-exercises">
+                    <li>50 KB Swings</li>
+                    <li>50 KB Goblet Squats</li>
+                    <li>50 KB High Pulls</li>
+                    <li>50 KB Deadlifts</li>
+                    <li>50 KB Push Press</li>
+                    <li>50 KB Rows (each arm)</li>
+                    <li>50 KB Lunges</li>
+                    <li>50 KB Snatches</li>
+                    <li>50 KB Russian Twists</li>
+                    <li>50 KB Thrusters</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">THE CHIEF KB</h2>
+                <p class="wod-description">AMRAP 3, Rest 1, Repeat 5</p>
+                <ul class="wod-exercises">
+                    <li>5 rounds: 3 min AMRAP, 1 min rest</li>
+                    <li>3 KB Clean & Press</li>
+                    <li>6 KB Swings</li>
+                    <li>9 KB Goblet Squats</li>
+                    <li>Score each round separately</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">HELEN KB</h2>
+                <p class="wod-description">3 Rounds for Time</p>
+                <ul class="wod-exercises">
+                    <li>400m Run</li>
+                    <li>21 KB Swings</li>
+                    <li>12 Pull-ups</li>
+                    <li>Classic CrossFit with KB twist</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">DIANE KB</h2>
+                <p class="wod-description">21-15-9 Couplet</p>
+                <ul class="wod-exercises">
+                    <li>KB Deadlifts (heavy)</li>
+                    <li>Handstand Push-ups</li>
+                    <li>21-15-9 rep scheme</li>
+                    <li>For Time</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">GRACE KB</h2>
+                <p class="wod-description">30 Clean & Jerks for Time</p>
+                <ul class="wod-exercises">
+                    <li>30 KB Clean & Jerks for Time</li>
+                    <li>Alternate arms every 5 reps</li>
+                    <li>No setting KB down</li>
+                    <li>Sprint intensity</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">ISABEL KB</h2>
+                <p class="wod-description">30 Snatches for Time</p>
+                <ul class="wod-exercises">
+                    <li>30 KB Snatches for Time</li>
+                    <li>15 each arm</li>
+                    <li>Moderate weight for speed</li>
+                    <li>Technical precision crucial</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">NANCY KB</h2>
+                <p class="wod-description">5 Rounds for Time</p>
+                <ul class="wod-exercises">
+                    <li>400m Run</li>
+                    <li>15 KB Overhead Squats</li>
+                    <li>Repeat 5 rounds</li>
+                    <li>Focus on mobility & stability</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">KELLY KB</h2>
+                <p class="wod-description">5 Rounds for Time</p>
+                <ul class="wod-exercises">
+                    <li>400m Run</li>
+                    <li>30 KB Box Step-ups</li>
+                    <li>30 KB Wall Ball Shots</li>
+                    <li>Endurance & leg strength focus</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">BARBARA KB</h2>
+                <p class="wod-description">4 Rounds, 3 Min Rest</p>
+                <ul class="wod-exercises">
+                    <li>4 rounds, 3 min rest between:</li>
+                    <li>20 Pull-ups</li>
+                    <li>30 KB Thrusters</li>
+                    <li>40 KB Swings</li>
+                    <li>50 KB Goblet Squats</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">CHELSEA KB</h2>
+                <p class="wod-description">EMOM 30 Minutes</p>
+                <ul class="wod-exercises">
+                    <li>Every minute for 30 minutes:</li>
+                    <li>5 Pull-ups</li>
+                    <li>10 KB Thrusters</li>
+                    <li>15 KB Swings</li>
+                    <li>Ultimate endurance test</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">LYNNE KB</h2>
+                <p class="wod-description">Max Reps, 5 Rounds</p>
+                <ul class="wod-exercises">
+                    <li>5 rounds for max reps:</li>
+                    <li>Max KB Press (each arm)</li>
+                    <li>Max Pull-ups</li>
+                    <li>No time limit between exercises</li>
+                    <li>Record total reps</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">MARY KB</h2>
+                <p class="wod-description">AMRAP 20 Minutes</p>
+                <ul class="wod-exercises">
+                    <li>20 min AMRAP:</li>
+                    <li>5 Handstand Push-ups</li>
+                    <li>10 KB Pistol Squats</li>
+                    <li>15 Pull-ups</li>
+                    <li>Skill-based endurance test</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">KING KONG KB</h2>
+                <p class="wod-description">3 Rounds for Time</p>
+                <ul class="wod-exercises">
+                    <li>1 KB Deadlift (very heavy)</li>
+                    <li>2 KB Clean & Press</li>
+                    <li>3 KB Front Squats</li>
+                    <li>4 Handstand Push-ups</li>
+                    <li>Repeat 3 rounds</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">THE SEVEN KB</h2>
+                <p class="wod-description">7 Rounds for Time</p>
+                <ul class="wod-exercises">
+                    <li>7 KB Snatches (each arm)</li>
+                    <li>7 KB Thrusters</li>
+                    <li>7 KB Goblet Squats</li>
+                    <li>Repeat 7 rounds</li>
+                    <li>Lucky number seven!</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">BEAR COMPLEX KB</h2>
+                <p class="wod-description">7 Sets of Bear Sequence</p>
+                <ul class="wod-exercises">
+                    <li>7 sets, 5 rounds each set:</li>
+                    <li>KB Clean</li>
+                    <li>KB Front Squat</li>
+                    <li>KB Push Press</li>
+                    <li>KB Back Squat (across shoulders)</li>
+                    <li>KB Push Press</li>
+                </ul>
+            </div>
+
+            <div class="wod-section">
+                <h2 class="wod-title">DEATH BY KB</h2>
+                <p class="wod-description">Ascending EMOM Until Failure</p>
+                <ul class="wod-exercises">
+                    <li>Choose exercise (Swings, Thrusters, etc.)</li>
+                    <li>Min 1: 1 rep</li>
+                    <li>Min 2: 2 reps</li>
+                    <li>Continue until failure</li>
+                    <li>Record final minute completed</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Body Group Schedule Tab -->
+        <div id="schedule" class="tab-content">
+            <div class="body-type-selector">
+                <button class="body-type-btn active" onclick="showSchedule('beginner', this)">Beginner Schedule</button>
+                <button class="body-type-btn" onclick="showSchedule('intermediate', this)">Intermediate Schedule</button>
+                <button class="body-type-btn" onclick="showSchedule('advanced', this)">Advanced Schedule</button>
+                <button class="body-type-btn" onclick="showSchedule('sport', this)">Sport Specific</button>
+                <button class="body-type-btn" onclick="showSchedule('strength', this)">Pure Strength</button>
+                <button class="body-type-btn" onclick="showSchedule('conditioning', this)">Conditioning Focus</button>
+            </div>
+
+            <div id="scheduleContent">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Body Type Programs Tab -->
+        <div id="bodytype" class="tab-content">
+            <div class="body-type-selector">
+                <button class="body-type-btn active" onclick="showBodyType('strength', this)">Build Strength</button>
+                <button class="body-type-btn" onclick="showBodyType('lean', this)">Get Lean</button>
+                <button class="body-type-btn" onclick="showBodyType('athletic', this)">Athletic Build</button>
+                <button class="body-type-btn" onclick="showBodyType('endurance', this)">Endurance Focused</button>
+            </div>
+
+            <div id="bodyTypeContent">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Timer Tab -->
+        <div id="timer" class="tab-content">
+            <div class="timer-section">
+                <div class="timer-display" id="timerDisplay">00:00</div>
+                <div class="timer-controls">
+                    <button class="timer-btn" onclick="startTimer()">Start</button>
+                    <button class="timer-btn" onclick="pauseTimer()">Pause</button>
+                    <button class="timer-btn" onclick="resetTimer()">Reset</button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number" id="workoutsCompleted">0</span>
+                    <span class="stat-label">Workouts Completed</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="totalTime">0</span>
+                    <span class="stat-label">Total Time (min)</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="currentStreak">0</span>
+                    <span class="stat-label">Current Streak</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="avgWorkout">0</span>
+                    <span class="stat-label">Avg Workout (min)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Comprehensive Kettlebell Exercise Database
+        const exercises = [
+            {
+                name: "Kettlebell Swing (American)",
+                description: "Explosive hip hinge movement bringing kettlebell overhead. Core CrossFit movement for power and endurance.",
+                difficulty: "beginner",
+                muscles: ["glutes", "hamstrings", "core", "shoulders"],
+                category: ["fullbody", "posterior"],
+                instructions: [
+                    "Stand with feet shoulder-width apart, KB between feet",
+                    "Hinge at hips, grab KB with both hands",
+                    "Drive hips forward explosively, swing KB to overhead",
+                    "Let gravity bring KB down, hinge hips to absorb",
+                    "Maintain neutral spine throughout movement"
+                ],
+                tips: [
+                    "Power comes from hips, not arms",
+                    "Keep core tight throughout",
+                    "Full hip extension at top"
+                ],
+                mistakes: [
+                    "Using arms to lift the kettlebell",
+                    "Squatting instead of hinging",
+                    "Allowing back to round"
+                ],
+                variations: ["Russian Swing (chest height)", "Single Arm Swing", "Alternating Swing"],
+                reps: "15-25 reps, 3-5 sets",
+                weight: "12-20kg for beginners"
+            },
+            {
+                name: "Kettlebell Swing (Russian)",
+                description: "Traditional swing to chest height. Foundation movement for all ballistic kettlebell exercises.",
+                difficulty: "beginner",
+                muscles: ["glutes", "hamstrings", "core"],
+                category: ["fullbody", "posterior"],
+                instructions: [
+                    "Stand with feet shoulder-width apart, KB in front",
+                    "Hinge at hips, grab KB with overhand grip",
+                    "Drive hips forward, swing KB to chest level",
+                    "Control the descent with hip hinge",
+                    "Maintain flat back throughout"
+                ],
+                tips: [
+                    "Think 'hike a football' on the backswing",
+                    "Squeeze glutes hard at the top",
+                    "Eyes forward, chest proud"
+                ],
+                mistakes: [
+                    "Swinging too high (American style)",
+                    "Bending knees too much (squatting)",
+                    "Leaning back at the top"
+                ],
+                variations: ["Two-Hand Swing", "Hand-to-Hand Swing", "Between-the-Legs Pass"],
+                reps: "20-50 reps, 3-6 sets",
+                weight: "16-24kg for beginners"
+            },
+            {
+                name: "Kettlebell Goblet Squat",
+                description: "Front-loaded squat holding kettlebell at chest. Perfect for learning squat mechanics.",
+                difficulty: "beginner",
+                muscles: ["quads", "glutes", "core"],
+                category: ["lower", "legs"],
+                instructions: [
+                    "Hold KB by horns at chest level",
+                    "Feet slightly wider than shoulders",
+                    "Descend by breaking at hips and knees",
+                    "Keep chest up, knees track over toes",
+                    "Drive through heels to stand"
+                ],
+                tips: [
+                    "Elbows stay inside knees",
+                    "Use KB as counterbalance",
+                    "Full depth if mobility allows"
+                ],
+                mistakes: [
+                    "Knees caving inward",
+                    "Rising on toes",
+                    "Leaning too far forward"
+                ],
+                variations: ["Goblet Pulse Squats", "Goblet Jump Squats", "Offset Goblet Squat"],
+                reps: "8-15 reps, 3-4 sets",
+                weight: "8-16kg for beginners"
+            },
+            {
+                name: "Turkish Get-Up",
+                description: "Complex movement from lying to standing. The ultimate full-body stability and strength exercise.",
+                difficulty: "advanced",
+                muscles: ["shoulders", "core", "legs", "back"],
+                category: ["fullbody", "stability"],
+                instructions: [
+                    "Start lying down, KB pressed up in right hand",
+                    "Roll to left elbow, then to left hand",
+                    "Bridge up, sweep left leg under to lunge",
+                    "Stand up from lunge position",
+                    "Reverse the sequence to return down"
+                ],
+                tips: [
+                    "Keep eyes on KB throughout",
+                    "Move slowly and controlled",
+                    "Practice without weight first"
+                ],
+                mistakes: [
+                    "Looking away from the kettlebell",
+                    "Rushing through the movement",
+                    "Using too much weight too soon"
+                ],
+                variations: ["Half Get-Up", "Naked Get-Up", "Bottoms-Up Get-Up"],
+                reps: "3-5 per side, 2-3 sets",
+                weight: "8-12kg for beginners"
+            },
+            {
+                name: "Kettlebell Deadlift",
+                description: "Hip hinge pattern with kettlebell. Builds posterior chain strength and teaches proper lifting mechanics.",
+                difficulty: "beginner",
+                muscles: ["glutes", "hamstrings", "erectors", "traps"],
+                category: ["lower", "posterior"],
+                instructions: [
+                    "Stand with KB between feet, toes under handle",
+                    "Hinge at hips, keep chest up and back flat",
+                    "Grip KB with both hands, arms straight",
+                    "Drive through heels, extend hips to stand",
+                    "Squeeze glutes at top, reverse movement"
+                ],
+                tips: [
+                    "Weight stays on heels",
+                    "Maintain neutral spine",
+                    "Think 'push floor away'"
+                ],
+                mistakes: [
+                    "Rounding the back",
+                    "Letting KB drift away from body",
+                    "Hyperextending at the top"
+                ],
+                variations: ["Sumo Deadlift", "Single-Leg Deadlift", "Deficit Deadlift"],
+                reps: "5-8 reps, 3-5 sets",
+                weight: "16-24kg for beginners"
+            },
+            {
+                name: "Kettlebell Clean",
+                description: "Explosive movement bringing KB to rack position. Essential for Olympic-style KB lifts.",
+                difficulty: "intermediate",
+                muscles: ["legs", "back", "shoulders", "core"],
+                category: ["fullbody", "power"],
+                instructions: [
+                    "Start in deadlift position with single KB",
+                    "Drive hips forward explosively",
+                    "Pull KB close to body as it rises",
+                    "Rotate wrist and catch in rack position",
+                    "KB should rest on forearm, not wrist"
+                ],
+                tips: [
+                    "Think 'dead clean' - no arm pull",
+                    "Wrist rotation is key to catching",
+                    "Soft knees on the catch"
+                ],
+                mistakes: [
+                    "Banging KB on wrist",
+                    "Pulling with arms too early",
+                    "Missing the rack position"
+                ],
+                variations: ["Double Clean", "Hang Clean", "Clean & Press"],
+                reps: "3-6 reps, 4-6 sets",
+                weight: "12-20kg for beginners"
+            },
+            {
+                name: "Kettlebell Snatch",
+                description: "Single motion from floor to overhead. Most technically demanding KB movement.",
+                difficulty: "advanced",
+                muscles: ["legs", "back", "shoulders", "core"],
+                category: ["fullbody", "power"],
+                instructions: [
+                    "Start like a single-arm deadlift",
+                    "Drive hips explosively, KB rises",
+                    "Pull KB close, then punch through",
+                    "Catch overhead with locked arm",
+                    "KB rests on back of hand/forearm"
+                ],
+                tips: [
+                    "Patience in the first pull",
+                    "Aggressive hip drive",
+                    "Punch through to avoid banging"
+                ],
+                mistakes: [
+                    "Banging KB on forearm",
+                    "Pressing instead of punching",
+                    "Poor hip drive timing"
+                ],
+                variations: ["Hang Snatch", "Dead Snatch", "Double Snatch"],
+                reps: "3-5 reps, 5-8 sets",
+                weight: "12-16kg for beginners"
+            },
+            {
+                name: "Kettlebell Thruster",
+                description: "Squat to overhead press combination. Ultimate full-body power exercise.",
+                difficulty: "intermediate",
+                muscles: ["legs", "shoulders", "core"],
+                category: ["fullbody", "power"],
+                instructions: [
+                    "Hold KB in goblet position at chest",
+                    "Perform full depth squat",
+                    "Drive up explosively through legs",
+                    "Use leg drive to press KB overhead",
+                    "Return to start position with control"
+                ],
+                tips: [
+                    "Use legs to initiate press",
+                    "Smooth transition from squat to press",
+                    "Keep core braced throughout"
+                ],
+                mistakes: [
+                    "Pausing between squat and press",
+                    "Using only arms for press",
+                    "Poor squat depth"
+                ],
+                variations: ["Double Thruster", "Single-Arm Thruster", "Alternating Thruster"],
+                reps: "6-12 reps, 3-5 sets",
+                weight: "12-20kg for beginners"
+            },
+            {
+                name: "Kettlebell Press",
+                description: "Overhead press from rack position. Builds shoulder strength and stability.",
+                difficulty: "intermediate",
+                muscles: ["shoulders", "triceps", "core"],
+                category: ["upper", "press"],
+                instructions: [
+                    "Clean KB to rack position",
+                    "Keep elbow close to ribs",
+                    "Press straight up, not forward",
+                    "Lock out completely overhead",
+                    "Lower with control to rack"
+                ],
+                tips: [
+                    "Engage lats for stability",
+                    "Press in straight line up",
+                    "Full lockout at top"
+                ],
+                mistakes: [
+                    "Pressing forward instead of up",
+                    "Incomplete lockout",
+                    "Losing rack position"
+                ],
+                variations: ["Push Press", "Jerk", "Bottoms-Up Press"],
+                reps: "3-8 reps, 3-5 sets",
+                weight: "12-16kg for beginners"
+            },
+            {
+                name: "Kettlebell High Pull",
+                description: "Explosive pull to chest height. Develops pulling power and upper back strength.",
+                difficulty: "intermediate",
+                muscles: ["traps", "rear delts", "rhomboids", "core"],
+                category: ["upper", "pull"],
+                instructions: [
+                    "Start in deadlift position with KB",
+                    "Drive hips forward explosively",
+                    "Pull KB high, elbows lead",
+                    "Keep KB close to body",
+                    "Lower with control"
+                ],
+                tips: [
+                    "Elbows high and outside",
+                    "Fast up, controlled down",
+                    "Hip drive initiates movement"
+                ],
+                mistakes: [
+                    "Pulling with arms only",
+                    "KB drifts away from body",
+                    "Poor hip extension"
+                ],
+                variations: ["Sumo High Pull", "Single-Arm High Pull", "Double High Pull"],
+                reps: "6-10 reps, 3-5 sets",
+                weight: "16-24kg for beginners"
+            },
+            {
+                name: "Kettlebell Windmill",
+                description: "Hip hinge with overhead hold. Excellent for shoulder mobility and core stability.",
+                difficulty: "advanced",
+                muscles: ["shoulders", "core", "hamstrings"],
+                category: ["fullbody", "mobility"],
+                instructions: [
+                    "Press KB overhead with right hand",
+                    "Turn feet 45 degrees left",
+                    "Hinge at hips, reach down with left hand",
+                    "Keep eyes on KB, arm locked",
+                    "Touch floor, return to standing"
+                ],
+                tips: [
+                    "Never lose sight of KB",
+                    "Hip hinge, not side bend",
+                    "Start light and progress slowly"
+                ],
+                mistakes: [
+                    "Bending supporting arm",
+                    "Side bending instead of hinging",
+                    "Rushing the movement"
+                ],
+                variations: ["Bent Press", "Overhead Squat", "Turkish Get-Up"],
+                reps: "3-6 per side, 2-3 sets",
+                weight: "8-12kg for beginners"
+            },
+            {
+                name: "Kettlebell Halo",
+                description: "Circular movement around the head. Great warm-up and shoulder mobility exercise.",
+                difficulty: "beginner",
+                muscles: ["shoulders", "triceps", "core"],
+                category: ["upper", "mobility"],
+                instructions: [
+                    "Hold KB upside down by horns",
+                    "Start at chest level",
+                    "Circle KB around head clockwise",
+                    "Keep core tight, don't arch back",
+                    "Reverse direction after reps"
+                ],
+                tips: [
+                    "Keep KB close to head",
+                    "Maintain good posture",
+                    "Control the movement"
+                ],
+                mistakes: [
+                    "Using too heavy weight",
+                    "Arching back excessively",
+                    "Moving too fast"
+                ],
+                variations: ["Kneeling Halo", "Single-Arm Halo", "Behind-Neck Halo"],
+                reps: "5-10 each direction, 2-3 sets",
+                weight: "8-12kg for beginners"
+            },
+            {
+                name: "Kettlebell Slingshot",
+                description: "Pass KB around waist. Core strengthening and grip endurance exercise.",
+                difficulty: "beginner",
+                muscles: ["core", "forearms", "shoulders"],
+                category: ["core", "grip"],
+                instructions: [
+                    "Stand with feet hip-width apart",
+                    "Hold KB in right hand at side",
+                    "Pass KB behind back to left hand",
+                    "Bring KB around front to right hand",
+                    "Keep core tight throughout"
+                ],
+                tips: [
+                    "Stay tall, don't twist torso",
+                    "Smooth, controlled movement",
+                    "Change directions"
+                ],
+                mistakes: [
+                    "Twisting the torso",
+                    "Dropping hands too low",
+                    "Moving too fast"
+                ],
+                variations: ["Reverse Slingshot", "Squat Slingshot", "Lunge Slingshot"],
+                reps: "10-20 each direction, 2-3 sets",
+                weight: "8-16kg for beginners"
+            },
+            {
+                name: "Kettlebell Figure 8",
+                description: "Pass KB through legs in figure-8 pattern. Improves coordination and grip strength.",
+                difficulty: "beginner",
+                muscles: ["core", "forearms", "legs"],
+                category: ["core", "coordination"],
+                instructions: [
+                    "Stand with wide stance, knees slightly bent",
+                    "Hold KB in right hand",
+                    "Pass KB between legs to left hand",
+                    "Bring KB around left leg to front",
+                    "Pass through legs again to right hand"
+                ],
+                tips: [
+                    "Keep knees soft",
+                    "Smooth figure-8 pattern",
+                    "Don't bang knees"
+                ],
+                mistakes: [
+                    "Stance too narrow",
+                    "Hitting knees with KB",
+                    "Losing the pattern"
+                ],
+                variations: ["Standing Figure 8", "Moving Figure 8", "Squat Figure 8"],
+                reps: "8-15 per direction, 2-3 sets",
+                weight: "8-12kg for beginners"
+            },
+            {
+                name: "Kettlebell Clean & Press",
+                description: "Clean to rack then press overhead. Classic strength-building combination.",
+                difficulty: "intermediate",
+                muscles: ["legs", "back", "shoulders", "core"],
+                category: ["fullbody", "strength"],
+                instructions: [
+                    "Clean KB to rack position",
+                    "Pause briefly in rack",
+                    "Press KB straight overhead",
+                    "Lock out completely",
+                    "Lower to rack, then to floor"
+                ],
+                tips: [
+                    "Master clean first, then press",
+                    "Brief pause in rack position",
+                    "Full lockout overhead"
+                ],
+                mistakes: [
+                    "Rushing between movements",
+                    "Poor rack position",
+                    "Incomplete overhead lockout"
+                ],
+                variations: ["Double Clean & Press", "Push Press", "Clean & Jerk"],
+                reps: "3-6 reps, 4-5 sets",
+                weight: "12-20kg for beginners"
+            },
+            {
+                name: "Kettlebell Push Press",
+                description: "Leg drive assisted overhead press. Allows heavier loads than strict press.",
+                difficulty: "intermediate",
+                muscles: ["legs", "shoulders", "core"],
+                category: ["fullbody", "power"],
+                instructions: [
+                    "Start with KB in rack position",
+                    "Dip knees slightly",
+                    "Drive up explosively with legs",
+                    "Use leg drive to press KB overhead",
+                    "Lower with control"
+                ],
+                tips: [
+                    "Short, fast dip",
+                    "Explosive leg drive",
+                    "Press as legs extend"
+                ],
+                mistakes: [
+                    "Too deep knee dip",
+                    "Slow leg drive",
+                    "Not using legs efficiently"
+                ],
+                variations: ["Jerk", "Split Jerk", "Double Push Press"],
+                reps: "3-6 reps, 4-6 sets",
+                weight: "16-24kg for beginners"
+            },
+            {
+                name: "Kettlebell Overhead Squat",
+                description: "Squat while holding KB overhead. Extreme mobility and stability challenge.",
+                difficulty: "advanced",
+                muscles: ["legs", "shoulders", "core"],
+                category: ["fullbody", "stability"],
+                instructions: [
+                    "Press KB overhead with locked arm",
+                    "Keep eyes on KB throughout",
+                    "Squat down maintaining overhead position",
+                    "Drive through heels to stand",
+                    "Never lose KB position"
+                ],
+                tips: [
+                    "Start with mobility work",
+                    "Use light weight initially",
+                    "Focus on overhead stability"
+                ],
+                mistakes: [
+                    "Poor shoulder mobility",
+                    "Looking away from KB",
+                    "Losing overhead position"
+                ],
+                variations: ["Goblet Squat", "Front Squat", "Cossack Squat"],
+                reps: "3-8 reps, 2-4 sets",
+                weight: "8-12kg for beginners"
+            },
+            {
+                name: "Kettlebell Lunge",
+                description: "Forward or reverse lunge with KB. Unilateral leg strength and stability.",
+                difficulty: "beginner",
+                muscles: ["quads", "glutes", "calves"],
+                category: ["lower", "unilateral"],
+                instructions: [
+                    "Hold KB in goblet or rack position",
+                    "Step forward into lunge",
+                    "Lower back knee toward ground",
+                    "Drive through front heel to return",
+                    "Alternate legs or complete set per side"
+                ],
+                tips: [
+                    "Long stride for glute activation",
+                    "Keep torso upright",
+                    "Control the descent"
+                ],
+                variations: ["Reverse Lunge", "Walking Lunge", "Lateral Lunge"],
+                reps: "8-12 per leg, 3 sets",
+                weight: "8-16kg for beginners"
+            },
+            {
+                name: "Kettlebell Row",
+                description: "Bent-over rowing movement. Builds upper back and rear delt strength.",
+                difficulty: "beginner",
+                muscles: ["lats", "rhomboids", "rear delts"],
+                category: ["upper", "pull"],
+                instructions: [
+                    "Hinge at hips, KB in one hand",
+                    "Support with opposite hand on bench",
+                    "Pull KB to ribs, elbow close",
+                    "Squeeze shoulder blade",
+                    "Lower with control"
+                ],
+                tips: [
+                    "Pull to ribs, not chest",
+                    "Squeeze at the top",
+                    "Control the negative"
+                ],
+                variations: ["Bent-Over Row", "Renegade Row", "Single-Arm Row"],
+                reps: "8-12 per arm, 3 sets",
+                weight: "12-20kg for beginners"
+            },
+            {
+                name: "Kettlebell Farmer's Walk",
+                description: "Walking while holding heavy KBs. Ultimate grip and core endurance exercise.",
+                difficulty: "beginner",
+                muscles: ["forearms", "traps", "core", "legs"],
+                category: ["fullbody", "carry"],
+                instructions: [
+                    "Hold heavy KBs at sides",
+                    "Stand tall, shoulders back",
+                    "Walk forward with control",
+                    "Maintain posture throughout",
+                    "Don't let KBs swing"
+                ],
+                tips: [
+                    "Tall posture, no slouching",
+                    "Small steps for control",
+                    "Breathe normally"
+                ],
+                variations: ["Single-Arm Carry", "Suitcase Carry", "Mixed Carry"],
+                reps: "20-50m walks, 3-4 sets",
+                weight: "20-32kg for beginners"
+            },
+            {
+                name: "Kettlebell Bottoms-Up Press",
+                description: "Press with KB upside down. Extreme grip and shoulder stabilization challenge.",
+                difficulty: "advanced",
+                muscles: ["shoulders", "forearms", "core"],
+                category: ["upper", "stability"],
+                instructions: [
+                    "Clean KB to upside-down rack position",
+                    "Grip handle tightly to prevent tipping",
+                    "Press straight up maintaining balance",
+                    "Control throughout entire movement",
+                    "Lower slowly to rack"
+                ],
+                tips: [
+                    "Start very light",
+                    "Extreme grip strength required",
+                    "Perfect for shoulder stability"
+                ],
+                variations: ["Bottoms-Up Clean", "Bottoms-Up Get-Up", "Bottoms-Up Walk"],
+                reps: "2-5 per arm, 3 sets",
+                weight: "8-12kg for beginners"
+            },
+            {
+                name: "Kettlebell Single-Leg Deadlift",
+                description: "Unilateral hip hinge. Builds balance, stability, and posterior chain strength.",
+                difficulty: "intermediate",
+                muscles: ["glutes", "hamstrings", "core"],
+                category: ["lower", "unilateral"],
+                instructions: [
+                    "Hold KB in opposite hand to standing leg",
+                    "Hinge at hip, extend free leg back",
+                    "Lower KB toward ground",
+                    "Drive through standing heel to return",
+                    "Keep hips square throughout"
+                ],
+                tips: [
+                    "Start without weight",
+                    "Focus on balance first",
+                    "Keep hips level"
+                ],
+                variations: ["Romanian Deadlift", "Stiff-Leg Deadlift", "Suitcase Deadlift"],
+                reps: "5-8 per leg, 3 sets",
+                weight: "8-16kg for beginners"
+            },
+            {
+                name: "Kettlebell Man Maker",
+                description: "Burpee with KB rows and press. Ultimate full-body conditioning exercise.",
+                difficulty: "advanced",
+                muscles: ["chest", "back", "shoulders", "legs", "core"],
+                category: ["fullbody", "conditioning"],
+                instructions: [
+                    "Start in plank with hands on KB handles",
+                    "Perform push-up",
+                    "Row each KB to ribs",
+                    "Jump feet to hands",
+                    "Clean and press KBs overhead"
+                ],
+                tips: [
+                    "Maintain plank throughout rows",
+                    "Control the movement",
+                    "Scale as needed"
+                ],
+                variations: ["Single KB Man Maker", "Burpee Box Jump", "Devil's Press"],
+                reps: "3-8 reps, 3-5 sets",
+                weight: "12-16kg for beginners"
+            },
+            {
+                name: "Kettlebell Pistol Squat",
+                description: "Single-leg squat holding KB for counterbalance. Advanced unilateral strength.",
+                difficulty: "advanced",
+                muscles: ["quads", "glutes", "core"],
+                category: ["lower", "unilateral"],
+                instructions: [
+                    "Hold KB at chest for counterbalance",
+                    "Extend one leg forward",
+                    "Squat down on standing leg",
+                    "Drive through heel to stand",
+                    "Keep extended leg off ground"
+                ],
+                tips: [
+                    "Use KB as counterweight",
+                    "Start with assisted versions",
+                    "Build ankle mobility first"
+                ],
+                variations: ["Assisted Pistol", "Box Pistol", "Weighted Pistol"],
+                reps: "2-6 per leg, 3 sets",
+                weight: "8-12kg for beginners"
+            },
+            {
+                name: "Kettlebell Jump Squat",
+                description: "Explosive squat jump with KB. Develops lower body power and athleticism.",
+                difficulty: "intermediate",
+                muscles: ["quads", "glutes", "calves"],
+                category: ["lower", "power"],
+                instructions: [
+                    "Hold KB in goblet position",
+                    "Squat down explosively",
+                    "Jump up as high as possible",
+                    "Land softly in squat position",
+                    "Immediately go into next rep"
+                ],
+                tips: [
+                    "Soft landings essential",
+                    "Full extension on jump",
+                    "Control the descent"
+                ],
+                variations: ["Goblet Jump Squat", "Single-Arm Jump Squat", "Alternating Jump Squat"],
+                reps: "5-10 reps, 3-5 sets",
+                weight: "8-16kg for beginners"
+            },
+            {
+                name: "Kettlebell Sumo Deadlift",
+                description: "Wide stance deadlift. Emphasizes glutes and inner thighs.",
+                difficulty: "beginner",
+                muscles: ["glutes", "hamstrings", "adductors"],
+                category: ["lower", "posterior"],
+                instructions: [
+                    "Wide stance, toes pointed out",
+                    "KB between feet, hands inside legs",
+                    "Sit back into hips",
+                    "Drive through heels to stand",
+                    "Squeeze glutes at top"
+                ],
+                tips: [
+                    "Knees track over toes",
+                    "Chest up throughout",
+                    "Strong glute squeeze"
+                ],
+                variations: ["Sumo High Pull", "Wide-Grip Deadlift", "Sumo Squat"],
+                reps: "6-10 reps, 3-4 sets",
+                weight: "16-24kg for beginners"
+            },
+            {
+                name: "Kettlebell Cossack Squat",
+                description: "Side lunge squat. Improves hip mobility and lateral strength.",
+                difficulty: "intermediate",
+                muscles: ["quads", "glutes", "adductors"],
+                category: ["lower", "mobility"],
+                instructions: [
+                    "Wide stance holding KB at chest",
+                    "Shift weight to one leg",
+                    "Squat down on that leg",
+                    "Keep other leg straight",
+                    "Drive up and switch sides"
+                ],
+                tips: [
+                    "Keep chest up",
+                    "Straight leg stays flat",
+                    "Control the movement"
+                ],
+                variations: ["Lateral Lunge", "Side Squat", "Cossack Stretch"],
+                reps: "5-8 per side, 3 sets",
+                weight: "8-16kg for beginners"
+            },
+            {
+                name: "Kettlebell Plank Drag",
+                description: "Plank position dragging KB side to side. Core anti-rotation strength.",
+                difficulty: "intermediate",
+                muscles: ["core", "shoulders", "chest"],
+                category: ["core", "stability"],
+                instructions: [
+                    "Start in plank position",
+                    "KB on one side of body",
+                    "Reach across and drag KB to other side",
+                    "Maintain plank throughout",
+                    "Don't let hips rotate"
+                ],
+                tips: [
+                    "Fight the rotation",
+                    "Keep hips level",
+                    "Control the drag"
+                ],
+                variations: ["Plank Pull-Through", "Bear Crawl Drag", "Mountain Climber Drag"],
+                reps: "8-12 per side, 3 sets",
+                weight: "8-16kg for beginners"
+            }
+        ];
+
+        // Comprehensive Schedule Programs
+        const schedulePrograms = {
+            beginner: {
+                title: "BEGINNER 7-DAY SCHEDULE",
+                description: "Foundation building with basic movements and light loads",
+                schedule: [
+                    {
+                        day: "MONDAY - Movement Foundation",
+                        exercises: [
+                            "KB Deadlift - 3x8 (technique focus)",
+                            "KB Goblet Squat - 3x10",
+                            "KB Swing (Russian) - 3x15",
+                            "KB Halos - 2x8 each direction",
+                            "KB Slingshot - 2x10 each direction",
+                            "Plank Hold - 3x30 seconds"
+                        ]
+                    },
+                    {
+                        day: "TUESDAY - Upper Body Basics",
+                        exercises: [
+                            "KB Press - 3x6 each arm",
+                            "KB Row - 3x8 each arm",
+                            "KB Front Raise - 2x10",
+                            "KB Lateral Raise - 2x8 each arm",
+                            "KB Bicep Curl - 2x10",
+                            "KB Tricep Extension - 2x8"
+                        ]
+                    },
+                    {
+                        day: "WEDNESDAY - Active Recovery",
+                        exercises: [
+                            "KB Around the Body - 2x10 each direction",
+                            "KB Figure 8 - 2x8 each direction",
+                            "Light KB Swings - 2x10",
+                            "KB Wall Sit - 2x20 seconds",
+                            "Stretching & Mobility - 15 minutes"
+                        ]
+                    },
+                    {
+                        day: "THURSDAY - Lower Body Development",
+                        exercises: [
+                            "KB Goblet Squat - 4x8",
+                            "KB Lunge - 3x6 each leg",
+                            "KB Romanian Deadlift - 3x8",
+                            "KB Calf Raises - 3x12",
+                            "KB Farmer's Walk - 3x25m",
+                            "KB Hip Thrust - 3x10"
+                        ]
+                    },
+                    {
+                        day: "FRIDAY - Full Body Integration",
+                        exercises: [
+                            "KB Swing to Press - 3x8",
+                            "KB Squat to Stand - 3x8",
+                            "KB Clean Practice - 3x5 each",
+                            "KB Turkish Get-Up (Partial) - 2x3 each",
+                            "KB Russian Complex (Light) - 2 rounds"
+                        ]
+                    },
+                    {
+                        day: "SATURDAY - Skill Practice",
+                        exercises: [
+                            "KB Swing Technique - 15 minutes",
+                            "KB Get-Up Progressions - 15 minutes", 
+                            "KB Flow Practice - 10 minutes",
+                            "KB Carries - 3x50m (various)",
+                            "Flexibility & Recovery"
+                        ]
+                    },
+                    {
+                        day: "SUNDAY - Rest & Recovery",
+                        exercises: [
+                            "Complete Rest or Light Walk",
+                            "Foam Rolling - 15 minutes",
+                            "Stretching - 15 minutes",
+                            "Meal Prep",
+                            "Mental Recovery Activities"
+                        ]
+                    }
+                ]
+            },
+            intermediate: {
+                title: "INTERMEDIATE 7-DAY SCHEDULE",
+                description: "Progressive overload with complex movements and moderate intensity",
+                schedule: [
+                    {
+                        day: "MONDAY - Upper Body Power",
+                        exercises: [
+                            "KB Clean & Press - 5x5 each arm",
+                            "KB Bottoms-Up Press - 3x6 each",
+                            "KB High Pulls - 4x8",
+                            "KB Gorilla Rows - 4x8 each",
+                            "KB See-Saw Press - 3x8",
+                            "KB Push-Up Plank Drags - 3x6 each side"
+                        ]
+                    },
+                    {
+                        day: "TUESDAY - Lower Body Strength",
+                        exercises: [
+                            "KB Double Front Squat - 4x6",
+                            "KB Single-Leg Deadlift - 4x6 each",
+                            "KB Bulgarian Split Squat - 3x8 each",
+                            "KB Jump Squats - 3x8",
+                            "KB Walking Lunges - 3x10 each",
+                            "KB Cossack Squats - 3x6 each"
+                        ]
+                    },
+                    {
+                        day: "WEDNESDAY - MetCon Wednesday",
+                        exercises: [
+                            "Choose One WOD:",
+                            "• Russian Complex - 4 rounds",
+                            "• Tabata KB Swings + Goblet Squats",
+                            "• EMOM 15: KB Ladder",
+                            "• 300 Rep Challenge (scaled)",
+                            "• Pyramid Power Workout"
+                        ]
+                    },
+                    {
+                        day: "THURSDAY - Core & Stability",
+                        exercises: [
+                            "Turkish Get-Ups - 4x3 each side",
+                            "KB Windmills - 4x5 each",
+                            "KB Russian Twists - 4x15",
+                            "KB Overhead Carries - 3x25m each",
+                            "KB Bear Crawl - 3x10 steps",
+                            "KB Plank Variations - 3x30s"
+                        ]
+                    },
+                    {
+                        day: "FRIDAY - Power & Explosiveness",
+                        exercises: [
+                            "KB Snatches - 6x4 each arm",
+                            "KB Clean & Jerk - 5x3 each",
+                            "KB Swing Snatch - 4x6 each",
+                            "KB American Swings - 4x12",
+                            "KB Dead Swings - 4x8",
+                            "KB Hot Potato - 3x20 tosses"
+                        ]
+                    },
+                    {
+                        day: "SATURDAY - Flow & Conditioning",
+                        exercises: [
+                            "KB Flow Complex - 25 minutes",
+                            "KB Carrying Medley - 4 rounds",
+                            "KB Sport Technique - 20 minutes",
+                            "KB Complex Chains - 3 rounds",
+                            "Mobility & Recovery Work"
+                        ]
+                    },
+                    {
+                        day: "SUNDAY - Active Recovery",
+                        exercises: [
+                            "Light KB Movement Practice",
+                            "KB Halos & Slingshots - 3 sets",
+                            "Easy KB Carries - 3x100m",
+                            "Yoga or Stretching - 30 minutes",
+                            "Mental Recovery"
+                        ]
+                    }
+                ]
+            },
+            advanced: {
+                title: "ADVANCED 7-DAY SCHEDULE",
+                description: "High-intensity training with complex movements and heavy loads",
+                schedule: [
+                    {
+                        day: "MONDAY - Maximum Strength",
+                        exercises: [
+                            "Heavy KB Deadlifts - 6x3",
+                            "Double KB Strict Press - 5x3",
+                            "KB Bent Press - 4x3 each side",
+                            "Double KB Front Squat - 5x3",
+                            "KB Bottoms-Up Carries - 4x15m each",
+                            "Heavy KB Farmers Walk - 4x50m"
+                        ]
+                    },
+                    {
+                        day: "TUESDAY - Sport Specific Power",
+                        exercises: [
+                            "KB Long Cycle - 6x5 (competition style)",
+                            "KB Double Snatch - 5x3",
+                            "KB Jerk - 8x3 each arm",
+                            "KB Half Snatch - 4x8 each",
+                            "KB Sport Endurance - 5 min sets",
+                            "Competition Simulation"
+                        ]
+                    },
+                    {
+                        day: "WEDNESDAY - Brutal MetCon",
+                        exercises: [
+                            "Choose Hardcore WOD:",
+                            "• The Great Destroyer (45 min)",
+                            "• Ivan Drago Protocol",
+                            "• Strange WOD (TGU focus)",
+                            "• Iron Man Workout",
+                            "• Custom Advanced WOD"
+                        ]
+                    },
+                    {
+                        day: "THURSDAY - Unilateral Mastery",
+                        exercises: [
+                            "Single-Arm KB Snatch - 8x3 each",
+                            "Pistol Squats w/ KB - 5x3 each",
+                            "Single-Arm KB Press - 6x3 each",
+                            "Single-Leg KB Deadlift - 5x5 each",
+                            "KB Offset Carries - 4x50m each",
+                            "Advanced TGU Variations - 4x2 each"
+                        ]
+                    },
+                    {
+                        day: "FRIDAY - Complex Conditioning",
+                        exercises: [
+                            "KB Complex Chains - 6 rounds",
+                            "Advanced Flow Patterns - 30 min",
+                            "Competition WOD Simulation",
+                            "High-Intensity Intervals",
+                            "Lactate Threshold Training"
+                        ]
+                    },
+                    {
+                        day: "SATURDAY - Skills & Mastery",
+                        exercises: [
+                            "Advanced KB Skills - 45 min",
+                            "Competition Lift Practice",
+                            "KB Flow Mastery Work",
+                            "Heavy Carry Variations",
+                            "Movement Quality Focus"
+                        ]
+                    },
+                    {
+                        day: "SUNDAY - Recovery & Regeneration",
+                        exercises: [
+                            "Light Movement Quality",
+                            "Mobility & Flexibility - 45 min",
+                            "Soft Tissue Work",
+                            "Mental Recovery",
+                            "Nutrition Focus"
+                        ]
+                    }
+                ]
+            },
+            sport: {
+                title: "KETTLEBELL SPORT SCHEDULE",
+                description: "Competition-focused training for Girevoy Sport athletes",
+                schedule: [
+                    {
+                        day: "MONDAY - Long Cycle Development",
+                        exercises: [
+                            "Long Cycle Technique - 8x3 (60% intensity)",
+                            "Jerk from Rack - 6x5 each arm",
+                            "Clean Practice - 8x3 each arm",
+                            "Rack Hold Endurance - 3x45 seconds",
+                            "Breathing Ladder Work - 15 minutes",
+                            "Competition Grip Strengthening"
+                        ]
+                    },
+                    {
+                        day: "TUESDAY - Snatch Specialization",
+                        exercises: [
+                            "Snatch Endurance Sets - 5 min rounds",
+                            "Half Snatch Practice - 6x10 each",
+                            "Snatch Technique Drills - 20 minutes",
+                            "Overhead Lockout Holds - 4x30s each",
+                            "Grip Endurance Training",
+                            "Competition Breathing Practice"
+                        ]
+                    },
+                    {
+                        day: "WEDNESDAY - GPP & Conditioning",
+                        exercises: [
+                            "General Physical Preparation:",
+                            "• Running - 3-5km easy pace",
+                            "• Pull-ups - 5x8",
+                            "• Push-ups - 5x15",
+                            "• Core Work - 20 minutes",
+                            "• Flexibility Training"
+                        ]
+                    },
+                    {
+                        day: "THURSDAY - Jerk Specialization",
+                        exercises: [
+                            "Jerk Endurance - 10 min sets",
+                            "Double Jerk Practice - 6x5",
+                            "Jerk from Different Positions",
+                            "Leg Drive Development",
+                            "Overhead Stability Work",
+                            "Competition Simulation"
+                        ]
+                    },
+                    {
+                        day: "FRIDAY - Competition Simulation",
+                        exercises: [
+                            "Mock Competition Environment",
+                            "10-minute test sets",
+                            "Competition Weight Practice",
+                            "Mental Training & Visualization",
+                            "Pacing Strategy Work",
+                            "Video Analysis & Feedback"
+                        ]
+                    },
+                    {
+                        day: "SATURDAY - Technical Refinement",
+                        exercises: [
+                            "Video Analysis Session",
+                            "Technical Correction Work",
+                            "Light Skill Practice",
+                            "Movement Quality Focus",
+                            "Competition Preparation",
+                            "Mental Preparation"
+                        ]
+                    },
+                    {
+                        day: "SUNDAY - Complete Rest",
+                        exercises: [
+                            "Complete Physical Rest",
+                            "Light Stretching Only",
+                            "Mental Recovery",
+                            "Nutrition Focus",
+                            "Competition Planning"
+                        ]
+                    }
+                ]
+            },
+            strength: {
+                title: "PURE STRENGTH SCHEDULE",
+                description: "Maximum strength development with heavy loads and low reps",
+                schedule: [
+                    {
+                        day: "MONDAY - Lower Body Strength",
+                        exercises: [
+                            "Heavy KB Deadlifts - 6x3 @ 85%+",
+                            "Double KB Front Squats - 5x3",
+                            "KB Sumo Deadlifts - 4x5",
+                            "Single-Leg KB Deadlifts - 4x3 each",
+                            "Heavy KB Farmer's Walks - 5x30m",
+                            "KB Goblet Squat Holds - 3x30s"
+                        ]
+                    },
+                    {
+                        day: "TUESDAY - Upper Body Strength",
+                        exercises: [
+                            "Double KB Strict Press - 6x3",
+                            "KB Bent Press - 5x3 each side",
+                            "Heavy KB Rows - 5x5 each",
+                            "KB Floor Press - 4x5 each",
+                            "Bottoms-Up Press - 4x3 each",
+                            "Heavy KB Carries - 4x25m"
+                        ]
+                    },
+                    {
+                        day: "WEDNESDAY - Power Development",
+                        exercises: [
+                            "KB Power Snatches - 8x3 each",
+                            "KB Clean & Jerk - 6x3 each",
+                            "KB Jump Squats - 5x5 (heavy)",
+                            "KB Swing to Press - 5x5",
+                            "Explosive KB Deadlifts - 5x3",
+                            "Power Endurance Work"
+                        ]
+                    },
+                    {
+                        day: "THURSDAY - Unilateral Strength",
+                        exercises: [
+                            "Single-Arm KB Press - 6x3 each",
+                            "Pistol Squats + KB - 5x3 each",
+                            "Single-Arm KB Rows - 5x5 each",
+                            "Offset KB Carries - 5x50m",
+                            "Single-Leg KB RDL - 4x5 each",
+                            "TGU with Heavy KB - 3x2 each"
+                        ]
+                    },
+                    {
+                        day: "FRIDAY - Maximum Effort",
+                        exercises: [
+                            "KB Max Effort Testing",
+                            "1RM Attempts (safe progression)",
+                            "Heavy Complex Work",
+                            "Strength Benchmarking",
+                            "Competition Lift Practice",
+                            "Maximal Carry Challenges"
+                        ]
+                    },
+                    {
+                        day: "SATURDAY - Volume Strength",
+                        exercises: [
+                            "The Big Four Protocol",
+                            "Double KB Complex Work",
+                            "Higher Volume Training",
+                            "Strength Endurance Focus",
+                            "Technical Practice",
+                            "Recovery Preparation"
+                        ]
+                    },
+                    {
+                        day: "SUNDAY - Recovery & Preparation",
+                        exercises: [
+                            "Light Technical Work",
+                            "Movement Preparation",
+                            "Mobility & Soft Tissue",
+                            "Mental Preparation",
+                            "Week Planning"
+                        ]
+                    }
+                ]
+            },
+            conditioning: {
+                title: "CONDITIONING FOCUS SCHEDULE",
+                description: "High-intensity metabolic conditioning and work capacity development",
+                schedule: [
+                    {
+                        day: "MONDAY - HIIT Power",
+                        exercises: [
+                            "Tabata Triple: KB Swings, Goblet Squats, Snatches",
+                            "Rest 2 min between Tabatas",
+                            "EMOM 10: Alternating KB Complex",
+                            "Finisher: 100 KB Swings for time",
+                            "Cool-down & Recovery"
+                        ]
+                    },
+                    {
+                        day: "TUESDAY - Endurance Base",
+                        exercises: [
+                            "45-min Aerobic KB Work",
+                            "Every 5 min: KB Complex",
+                            "Steady-state KB carries",
+                            "Low-intensity skill work",
+                            "Breathing & Rhythm Focus"
+                        ]
+                    },
+                    {
+                        day: "WEDNESDAY - WOD Wednesday",
+                        exercises: [
+                            "Rotating WOD Selection:",
+                            "• Week 1: The Great Destroyer",
+                            "• Week 2: Ivan Drago",
+                            "• Week 3: Mogadishu Mile",
+                            "• Week 4: Custom Challenge"
+                        ]
+                    },
+                    {
+                        day: "THURSDAY - Lactate Threshold",
+                        exercises: [
+                            "EMOM 20: Progressive KB Work",
+                            "8 rounds: 3 min work, 1 min rest",
+                            "KB complex at threshold pace",
+                            "Heart rate zone training",
+                            "Pacing strategy development"
+                        ]
+                    },
+                    {
+                        day: "FRIDAY - Power Endurance",
+                        exercises: [
+                            "KB Snatch Endurance Tests",
+                            "Multiple AMRAP rounds",
+                            "Explosive movement focus",
+                            "Competition-style endurance",
+                            "Work capacity development"
+                        ]
+                    },
+                    {
+                        day: "SATURDAY - Challenge Day",
+                        exercises: [
+                            "Weekly Challenge WODs",
+                            "Benchmark Testing",
+                            "New Movement Challenges",
+                            "Group Competitions",
+                            "Personal Records"
+                        ]
+                    },
+                    {
+                        day: "SUNDAY - Recovery Conditioning",
+                        exercises: [
+                            "Light Aerobic KB Work",
+                            "Easy Movement Practice",
+                            "Active Recovery Protocol",
+                            "Mobility & Flexibility",
+                            "Mental Recovery"
+                        ]
+                    }
+                ]
+            }
+        };
+        const bodyTypePrograms = {
+            strength: {
+                title: "STRENGTH BUILDING PROGRAM",
+                description: "Focus on heavy, low-rep movements to build maximum strength",
+                workouts: [
+                    {
+                        day: "Day 1 - The Big Four Foundation",
+                        exercises: [
+                            "Double KB Strict Press - 5x3",
+                            "Double KB Front Squat - 5x3",
+                            "Double KB Bent-Over Row - 5x3",
+                            "Heavy KB Deadlifts - 5x3",
+                            "KB Farmer's Walks - 4x50m"
+                        ]
+                    },
+                    {
+                        day: "Day 2 - Unilateral Strength", 
+                        exercises: [
+                            "Single-Arm KB Press - 5x3 each arm",
+                            "Racked KB Squats - 5x5 each side",
+                            "Single-Leg KB Deadlifts - 4x6 each",
+                            "Single-Arm KB Rows - 4x6 each",
+                            "Turkish Get-Ups - 3x3 each side"
+                        ]
+                    },
+                    {
+                        day: "Day 3 - Power Development",
+                        exercises: [
+                            "KB Snatches - 6x3 each arm",
+                            "KB Clean & Press - 5x3 each",
+                            "KB Thrusters - 5x5",
+                            "Heavy KB Swings - 5x10",
+                            "Overhead KB Carries - 4x25m each"
+                        ]
+                    },
+                    {
+                        day: "Day 4 - Complex Strength",
+                        exercises: [
+                            "Bell Bastard Ladder - work up to 5",
+                            "Double KB Overhead Deadlifts - 4x5",
+                            "Bottoms-Up Presses - 3x5 each",
+                            "KB Windmills - 3x5 each side",
+                            "Bent Press - 3x3 each side"
+                        ]
+                    }
+                ]
+            },
+            lean: {
+                title: "LEAN MUSCLE PROGRAM",
+                description: "High-intensity circuits for fat loss and muscle definition",
+                workouts: [
+                    {
+                        day: "Day 1 - HIIT Power Circuit",
+                        exercises: [
+                            "30s KB Swings / 30s Rest - 8 rounds",
+                            "30s KB Thrusters / 30s Rest - 6 rounds",
+                            "30s KB High Pulls / 30s Rest - 6 rounds",
+                            "30s KB Burpees / 30s Rest - 4 rounds",
+                            "Finisher: 200 KB Swings for time"
+                        ]
+                    },
+                    {
+                        day: "Day 2 - Metabolic Burn",
+                        exercises: [
+                            "EMOM 20 minutes:",
+                            "Min 1: 15 KB Swings",
+                            "Min 2: 10 KB Goblet Squats", 
+                            "Min 3: 8 KB Clean & Press",
+                            "Min 4: 12 KB High Pulls"
+                        ]
+                    },
+                    {
+                        day: "Day 3 - Quicksilver Protocol",
+                        exercises: [
+                            "3 Rounds for Time:",
+                            "25 KB Hang Cleans",
+                            "25 KB Single-Arm Swings",
+                            "25 KB Half Snatches",
+                            "2 min rest between rounds"
+                        ]
+                    },
+                    {
+                        day: "Day 4 - Tabata Destroyer",
+                        exercises: [
+                            "Tabata 1: KB Swings (8 rounds)",
+                            "Rest 2 minutes",
+                            "Tabata 2: KB Goblet Squats (8 rounds)",
+                            "Rest 2 minutes", 
+                            "Tabata 3: KB High Pulls (8 rounds)"
+                        ]
+                    }
+                ]
+            },
+            athletic: {
+                title: "ATHLETIC PERFORMANCE PROGRAM", 
+                description: "Sport-specific movements for explosive power and agility",
+                workouts: [
+                    {
+                        day: "Day 1 - Power & Explosiveness",
+                        exercises: [
+                            "KB Snatches - 8x3 each (90s rest)",
+                            "KB Clean & Jerk - 6x3 each",
+                            "KB Jump Squats - 5x6",
+                            "KB Swing Snatches - 4x5 each",
+                            "Sprint intervals - 6x30s"
+                        ]
+                    },
+                    {
+                        day: "Day 2 - Movement Quality",
+                        exercises: [
+                            "Turkish Get-Ups - 5x2 each side",
+                            "KB Windmills - 4x5 each",
+                            "KB Cossack Squats - 3x8 each",
+                            "KB Flow Complex - 15 min",
+                            "KB Halos & Mobility - 10 min"
+                        ]
+                    },
+                    {
+                        day: "Day 3 - Sport Simulation",
+                        exercises: [
+                            "MBG Complex (no rest between):",
+                            "Dead Swing → Tricep Push-Up",
+                            "EMOM 12 min, 3 reps",
+                            "Finish: Gorilla Blackback AMRAP 10 min"
+                        ]
+                    },
+                    {
+                        day: "Day 4 - Competition Prep",
+                        exercises: [
+                            "Long Cycle Practice - 5 min sets",
+                            "Half Snatch endurance - 3x50 reps",
+                            "Jerk technique - 8x3 each arm",
+                            "Recovery: KB carries & stretching"
+                        ]
+                    }
+                ]
+            },
+            endurance: {
+                title: "ENDURANCE FOCUSED PROGRAM",
+                description: "High-volume training for cardiovascular and muscular endurance",
+                workouts: [
+                    {
+                        day: "Day 1 - Aerobic Base",
+                        exercises: [
+                            "Simple & Sinister Protocol:",
+                            "100 Single-Arm Swings (10x10)",
+                            "10 Turkish Get-Ups (5 each side)",
+                            "Time goal: under 20 minutes"
+                        ]
+                    },
+                    {
+                        day: "Day 2 - Iron Man Challenge",
+                        exercises: [
+                            "Buy-in: 100 KB Swings",
+                            "30-min AMRAP:",
+                            "5 Double KB Military Press",
+                            "10 Double KB Hang Cleans", 
+                            "15 Double KB Squats"
+                        ]
+                    },
+                    {
+                        day: "Day 3 - Volume Challenge",
+                        exercises: [
+                            "Goal: 1000 KB Swings",
+                            "Mix in: 200 Goblet Squats",
+                            "100 Turkish Get-Ups",
+                            "100 KB High Pulls",
+                            "Take 60-90 minutes"
+                        ]
+                    },
+                    {
+                        day: "Day 4 - Endurance Complexes",
+                        exercises: [
+                            "4-in-1 Workout:",
+                            "4 min KB Swings AMRAP",
+                            "2 min rest",
+                            "4 min KB Press AMRAP",
+                            "2 min rest, repeat 3 cycles"
+                        ]
+                    }
+                ]
+            }
+        };
+
+        // Timer functionality
+        let timerInterval;
+        let seconds = 0;
+        let isRunning = false;
+
+        function showTab(tabName, buttonElement) {
+            // Hide all tab contents
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected tab and activate button
+            document.getElementById(tabName).classList.add('active');
+            buttonElement.classList.add('active');
+        }
+
+        function renderExercises(filteredExercises = exercises) {
+            const grid = document.getElementById('exerciseGrid');
+            if (!grid) {
+                console.error('Exercise grid element not found');
+                return;
+            }
+            
+            grid.innerHTML = '';
+            
+            if (!filteredExercises || filteredExercises.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; color: #cccccc;">No exercises found.</p>';
+                return;
+            }
+            
+            filteredExercises.forEach((exercise, index) => {
+                const card = document.createElement('div');
+                card.className = 'exercise-card';
+                card.onclick = () => toggleExerciseDetails(index);
+                
+                const muscleGroups = exercise.muscles ? exercise.muscles.map(muscle => 
+                    `<span class="muscle-tag">${muscle}</span>`
+                ).join('') : '';
+
+                const variationTags = exercise.variations ? exercise.variations.map(variation => 
+                    `<span class="variation-tag">${variation}</span>`
+                ).join('') : '';
+
+                const instructionsList = exercise.instructions ? exercise.instructions.map(instruction => 
+                    `<li>${instruction}</li>`
+                ).join('') : '';
+
+                const tipsList = exercise.tips ? exercise.tips.map(tip => 
+                    `<li>💡 ${tip}</li>`
+                ).join('') : '';
+
+                const mistakesList = exercise.mistakes ? exercise.mistakes.map(mistake => 
+                    `<li>⚠️ ${mistake}</li>`
+                ).join('') : '';
+                
+                card.innerHTML = `
+                    <div class="exercise-title">${exercise.name || 'Unknown Exercise'}</div>
+                    <div class="exercise-description">${exercise.description || 'No description available'}</div>
+                    <div class="muscle-groups">${muscleGroups}</div>
+                    <div class="exercise-details">
+                        <span class="difficulty ${exercise.difficulty || 'beginner'}">${(exercise.difficulty || 'beginner').toUpperCase()}</span>
+                        <button class="expand-btn" onclick="event.stopPropagation()">
+                            <span class="expand-text">View Details</span>
+                        </button>
+                    </div>
+                    
+                    ${exercise.instructions ? `
+                    <div class="exercise-details-full" id="details-${index}">
+                        <div class="exercise-meta">
+                            <div class="meta-item">
+                                <div class="meta-label">Recommended Reps</div>
+                                <div class="meta-value">${exercise.reps || 'Varies'}</div>
+                            </div>
+                            <div class="meta-item">
+                                <div class="meta-label">Beginner Weight</div>
+                                <div class="meta-value">${exercise.weight || 'Light'}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <div class="detail-title">📋 Step-by-Step Instructions</div>
+                            <ul class="detail-list">${instructionsList}</ul>
+                        </div>
+                        
+                        ${exercise.tips ? `
+                        <div class="detail-section">
+                            <div class="detail-title">🎯 Pro Tips</div>
+                            <ul class="detail-list">${tipsList}</ul>
+                        </div>
+                        ` : ''}
+                        
+                        ${exercise.mistakes ? `
+                        <div class="detail-section">
+                            <div class="detail-title">🚫 Common Mistakes</div>
+                            <ul class="detail-list">${mistakesList}</ul>
+                        </div>
+                        ` : ''}
+                        
+                        ${exercise.variations ? `
+                        <div class="detail-section">
+                            <div class="detail-title">🔄 Variations</div>
+                            <div class="variations-grid">${variationTags}</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                    ` : ''}
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleExerciseDetails(index) {
+            const detailsElement = document.getElementById(`details-${index}`);
+            const card = detailsElement.closest('.exercise-card');
+            const expandBtn = card.querySelector('.expand-btn .expand-text');
+            
+            if (detailsElement.classList.contains('show')) {
+                detailsElement.classList.remove('show');
+                card.classList.remove('expanded');
+                expandBtn.textContent = 'View Details';
+            } else {
+                // Close any other open details
+                document.querySelectorAll('.exercise-details-full.show').forEach(el => {
+                    el.classList.remove('show');
+                    el.closest('.exercise-card').classList.remove('expanded');
+                    el.closest('.exercise-card').querySelector('.expand-text').textContent = 'View Details';
+                });
+                
+                detailsElement.classList.add('show');
+                card.classList.add('expanded');
+                expandBtn.textContent = 'Hide Details';
+                
+                // Scroll to card
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function filterExercises(filter, buttonElement) {
+            // Update active filter button
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => btn.classList.remove('active'));
+            buttonElement.classList.add('active');
+            
+            let filtered = exercises;
+            
+            if (filter === 'all') {
+                filtered = exercises;
+            } else if (['beginner', 'intermediate', 'advanced'].includes(filter)) {
+                filtered = exercises.filter(ex => ex.difficulty === filter);
+            } else if (['upper', 'lower', 'core', 'fullbody'].includes(filter)) {
+                filtered = exercises.filter(ex => ex.category.includes(filter));
+            }
+            
+            renderExercises(filtered);
+        }
+
+        function showBodyType(type, buttonElement) {
+            // Update active button
+            const btns = document.querySelectorAll('.body-type-btn');
+            btns.forEach(btn => btn.classList.remove('active'));
+            buttonElement.classList.add('active');
+            
+            const program = bodyTypePrograms[type];
+            const content = document.getElementById('bodyTypeContent');
+            
+            let html = `
+                <div class="wod-section">
+                    <h2 class="wod-title">${program.title}</h2>
+                    <p class="wod-description">${program.description}</p>
+                </div>
+            `;
+            
+            program.workouts.forEach(workout => {
+                html += `
+                    <div class="wod-section">
+                        <h3 class="wod-title" style="font-size: 1.5rem;">${workout.day}</h3>
+                        <ul class="wod-exercises">
+                            ${workout.exercises.map(ex => `<li>${ex}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            });
+            
+            content.innerHTML = html;
+        }
+
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                timerInterval = setInterval(() => {
+                    seconds++;
+                    updateTimerDisplay();
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            isRunning = false;
+            clearInterval(timerInterval);
+        }
+
+        function resetTimer() {
+            isRunning = false;
+            clearInterval(timerInterval);
+            seconds = 0;
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            renderExercises();
+            initializeBodyTypeProgram();
+            loadStats();
+            setupSearch();
+        });
+
+        function setupSearch() {
+            const searchInput = document.getElementById('exerciseSearch');
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    searchExercises(searchTerm);
+                });
+            }
+        }
+
+        function searchExercises(searchTerm) {
+            if (!searchTerm) {
+                renderExercises();
+                return;
+            }
+            
+            const filtered = exercises.filter(exercise => 
+                exercise.name.toLowerCase().includes(searchTerm) ||
+                exercise.description.toLowerCase().includes(searchTerm) ||
+                exercise.muscles.some(muscle => muscle.toLowerCase().includes(searchTerm)) ||
+                exercise.category.some(cat => cat.toLowerCase().includes(searchTerm)) ||
+                (exercise.variations && exercise.variations.some(variation => 
+                    variation.toLowerCase().includes(searchTerm)))
+            );
+            
+            renderExercises(filtered);
+            
+            // Reset filter buttons
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => btn.classList.remove('active'));
+        }
+
+        function initializeBodyTypeProgram() {
+            const program = bodyTypePrograms['strength'];
+            const content = document.getElementById('bodyTypeContent');
+            
+            let html = `
+                <div class="wod-section">
+                    <h2 class="wod-title">${program.title}</h2>
+                    <p class="wod-description">${program.description}</p>
+                </div>
+            `;
+            
+            program.workouts.forEach(workout => {
+                html += `
+                    <div class="wod-section">
+                        <h3 class="wod-title" style="font-size: 1.5rem;">${workout.day}</h3>
+                        <ul class="wod-exercises">
+                            ${workout.exercises.map(ex => `<li>${ex}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            });
+            
+            content.innerHTML = html;
+        }
+
+        function loadStats() {
+            // Load and display stats (simulate data)
+            const stats = {
+                workoutsCompleted: 0,
+                totalTime: 0,
+                currentStreak: 0
+            };
+            
+            try {
+                stats.workoutsCompleted = localStorage.getItem('workoutsCompleted') || 0;
+                stats.totalTime = localStorage.getItem('totalTime') || 0;
+                stats.currentStreak = localStorage.getItem('currentStreak') || 0;
+            } catch (e) {
+                console.log('LocalStorage not available, using default values');
+            }
+            
+            const workoutsEl = document.getElementById('workoutsCompleted');
+            const totalTimeEl = document.getElementById('totalTime');
+            const streakEl = document.getElementById('currentStreak');
+            const avgEl = document.getElementById('avgWorkout');
+            
+            if (workoutsEl) workoutsEl.textContent = stats.workoutsCompleted;
+            if (totalTimeEl) totalTimeEl.textContent = stats.totalTime;
+            if (streakEl) streakEl.textContent = stats.currentStreak;
+            if (avgEl) {
+                avgEl.textContent = stats.workoutsCompleted > 0 ? Math.round(stats.totalTime / stats.workoutsCompleted) : 0;
+            }
+        }
+    </script>
+</body>
+</html>
